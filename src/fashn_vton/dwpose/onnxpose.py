@@ -7,7 +7,10 @@ from typing import List, Tuple
 
 import cv2
 import numpy as np
-import onnxruntime as ort
+try:
+    import onnxruntime as ort
+except ImportError:
+    raise Exception("onnxruntime is not installed, please install it with `pip install onnxruntime` or `pip install onnxruntime-gpu`")
 
 
 def preprocess(

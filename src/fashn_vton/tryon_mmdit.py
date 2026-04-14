@@ -14,6 +14,7 @@ from einops import rearrange, repeat
 from torch import Tensor, nn
 
 from .utils import cast_tuple, compact, exists, unpack_images
+from .types import torchArangeFloat
 
 
 # Use PyTorch's native scaled dot product attention (SDPA)
@@ -32,7 +33,7 @@ def attention(q: Tensor, k: Tensor, v: Tensor, pe: Tensor) -> Tensor:
 
 def rope(pos: Tensor, dim: int, theta: int) -> Tensor:
     assert dim % 2 == 0
-    scale = torch.arange(0, dim, 2, dtype=torch.float64, device=pos.device) / dim
+    scale = torch.arange(0, dim, 2, dtype=torchArangeFloat, device=pos.device) / dim
     omega = 1.0 / (theta**scale)
     out = torch.einsum("...n,d->...nd", pos, omega)
     out = torch.stack([torch.cos(out), -torch.sin(out), torch.sin(out), torch.cos(out)], dim=-1)
